@@ -18,9 +18,9 @@ let youtuber2 = {
 app.get("/:nickname", function (req, res) {
   const { nickname } = req.params;
 
-  if (nickname == "15ya") {
+  if (nickname === "15ya") {
     res.json(youtuber1);
-  } else if (nickname == "chim") {
+  } else if (nickname === "chim") {
     res.json(youtuber2);
   } else {
     res.json({ message: "오류입니다" });
