@@ -17,10 +17,25 @@ let youtuber2 = {
 };
 
 let db = new Map();
-db.set(1, youtuber1);
-db.set(2, youtuber2);
+let id = 1
+db.set(id++, youtuber1);
+db.set(id++, youtuber2);
 
 //REST API 설계
+app.get('/youtubers', (_req, res)=>{
+  res.json([...db.values()])
+  //방법1
+  // const youtubersArray = Array.from(db.values());
+  //res.json(youtubersArray);
+
+  //방법2
+  // let youtubersObject = {};
+  // db.forEach((value, key) => {
+  //   youtubersObject[key] = value;
+  // });
+  // res.json(youtubersObject);
+})
+
 
 app.get("/youtuber/:id", function (req, res) {
   let { id } = req.params;
@@ -33,3 +48,16 @@ app.get("/youtuber/:id", function (req, res) {
     res.json(youtube);
   }
 });
+
+app.use(express.json()) //http 외 모듈인 '미들웨어' : json 설정
+app.post('/youtuber', (req,res)=>{
+  //body에 숨겨져서 들어온 데이터를 화면에 뿌려줘볼가?
+
+  console.log(req.body)
+
+  db.set(id++,req.body)
+
+  res.json({
+    message: `${req.body.channelTitle}님, 유투버 생활을 응원합니다`
+  })
+})
