@@ -23,17 +23,26 @@ db.set(id++, youtuber2);
 
 //REST API 설계
 app.get("/youtubers", (_req, res) => {
-  res.json([...db.values()]);
+  // res.json([...db.values()]);
   //방법1
   // const youtubersArray = Array.from(db.values());
   //res.json(youtubersArray);
 
   //방법2
-  // let youtubersObject = {};
-  // db.forEach((value, key) => {
-  //   youtubersObject[key] = value;
-  // });
-  // res.json(youtubersObject);
+  let youtuber = {};
+
+if(db.size!==0){
+  db.forEach((value, key) => {
+    youtuber[key] = value;
+  });
+  res.json(youtuber);
+} else {
+  res.status(404).json({
+    message:'조회할 그게 없습니다'
+  })
+}
+
+ 
 });
 
 app.get("/youtubers/:id", function (req, res) {
@@ -50,11 +59,19 @@ app.get("/youtubers/:id", function (req, res) {
 
 app.use(express.json()); //http 외 모듈인 '미들웨어' : json 설정
 app.post("/youtubers", (req, res) => {
-  //body에 숨겨져서 들어온 데이터를 화면에 뿌려줘볼가?
-  db.set(id++, req.body);
-  res.json({
-    message: `${req.body.channelTitle}님, 유투버 생활을 응원합니다`,
-  });
+  const {channelTitle} = req.body
+  if(channelTitle){
+    db.set(id++, req.body);
+    res.status(201).json({
+      message: `${req.body.channelTitle}님, 유투버 생활을 응원합니다`,
+    });
+  } else {
+    res.status(400).json({
+      message:"요청 값을 제대로 보내주세요"
+    })
+  }
+
+ 
 });
 
 app.delete("/youtubers/:id", (req, res) => {
